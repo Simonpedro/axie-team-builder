@@ -1,4 +1,4 @@
-import { Container, Grid, Typography } from "@mui/material";
+import { Container, Grid, Typography, Box } from "@mui/material";
 import { useState } from "react";
 import AxieDetail from "../components/AxieDetail";
 import AxiePaginator from "../components/AxiePaginator";
@@ -35,8 +35,8 @@ export default function Home() {
       </Typography>
 
       <Typography>
-        Please fill the text fields with the Axies ids to receive suggestions on
-        similar ones
+        Complete the text fields with Axie ids to get suggestions of similar
+        Axies
       </Typography>
 
       <Grid container spacing={4} sx={{ mt: 2 }}>
@@ -54,7 +54,17 @@ export default function Home() {
         </Grid>
       </Grid>
 
-      <Grid container spacing={4} sx={{ mt: 2 }}>
+      {(similarAxies1 || similarAxies2 || similarAxies3) && (
+        <Box textAlign="left" mt={6}>
+          <Typography variant="h3" component="h2">
+            Results{" "}
+          </Typography>
+          <Typography variant="caption">
+            (Only the first 20 results are shown)
+          </Typography>
+        </Box>
+      )}
+      <Grid container spacing={4}>
         <Grid item xs={4}>
           {similarAxies1 && <AxiePaginator axies={similarAxies1} />}
         </Grid>

@@ -13,17 +13,17 @@ const AxiePaginator = ({ axies }: AxiePaginatorProps) => {
 
   const axieDetail = axies[indexShowing];
 
-  const backDisabled = length === 0 || indexShowing === 0;
+  const previousDisabled = length === 0 || indexShowing === 0;
   const nextDisabled = length === 0 || indexShowing >= length - 1;
 
   return (
     <Box py={2}>
       <Typography>{length} axies found</Typography>
       <Button
-        disabled={backDisabled}
+        disabled={previousDisabled}
         onClick={() => setIndexShowing(indexShowing - 1)}
       >
-        Back
+        Previous
       </Button>
       <AxieDetail axieDetail={axieDetail} />
       <Button
