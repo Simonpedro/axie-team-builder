@@ -10,7 +10,7 @@ interface Data {
 
 export interface AxieSearchCriteria {
   classes: Class[];
-  parts: PartType[];
+  parts: string[];
 }
 
 interface Variables {

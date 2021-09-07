@@ -25,7 +25,7 @@ const AxiePaginator = ({ axies }: AxiePaginatorProps) => {
       >
         Previous
       </Button>
-      <AxieDetail axieDetail={axieDetail} />
+      {axieDetail && <AxieDetail axieDetail={axieDetail} />}
       <Button
         disabled={nextDisabled}
         onClick={() => setIndexShowing(indexShowing + 1)}

@@ -1,4 +1,11 @@
-import { Container, Grid, Typography, Box } from "@mui/material";
+import {
+  Container,
+  Grid,
+  Typography,
+  Box,
+  FormControlLabel,
+  Checkbox,
+} from "@mui/material";
 import { useState } from "react";
 import AxieDetail from "../components/AxieDetail";
 import AxiePaginator from "../components/AxiePaginator";
@@ -13,19 +20,20 @@ export default function Home() {
   const [axie1Id, setAxie1Id] = useState("");
   const [axie2Id, setAxie2Id] = useState("");
   const [axie3Id, setAxie3Id] = useState("");
+  const [includeEyesAndEars, setIncludeEyesAndEars] = useState(true);
 
   const { data: axieDetail1 } = useAxieDetail(axie1Id);
   const { data: axieDetail2 } = useAxieDetail(axie2Id);
   const { data: axieDetail3 } = useAxieDetail(axie3Id);
 
   const { data: similarAxies1 } = useAxieBriefList(
-    getCriteriaFromAxie(axieDetail1),
+    getCriteriaFromAxie(includeEyesAndEars, axieDetail1),
   );
   const { data: similarAxies2 } = useAxieBriefList(
-    getCriteriaFromAxie(axieDetail2),
+    getCriteriaFromAxie(includeEyesAndEars, axieDetail2),
   );
   const { data: similarAxies3 } = useAxieBriefList(
-    getCriteriaFromAxie(axieDetail3),
+    getCriteriaFromAxie(includeEyesAndEars, axieDetail3),
   );
 
   return (
@@ -39,7 +47,7 @@ export default function Home() {
         Axies
       </Typography>
 
-      <Grid container spacing={4} sx={{ mt: 2 }}>
+      <Grid container spacing={2} sx={{ mt: 2 }}>
         <Grid item xs={4}>
           <AxieSelector label="Axie 1" value={axie1Id} onChange={setAxie1Id} />
           {axieDetail1 && <AxieDetail axieDetail={axieDetail1} />}
@@ -51,6 +59,22 @@ export default function Home() {
         <Grid item xs={4}>
           <AxieSelector label="Axie 3" value={axie3Id} onChange={setAxie3Id} />
           {axieDetail3 && <AxieDetail axieDetail={axieDetail3} />}
+        </Grid>
+
+        <Grid item xs={12}>
+          <Box textAlign="left">
+            <FormControlLabel
+              control={
+                <Checkbox
+                  checked={includeEyesAndEars}
+                  onChange={(e) => setIncludeEyesAndEars(e.target.checked)}
+                  name="includeEyesAndYears"
+                  color="primary"
+                />
+              }
+              label="Include eyes and ears?"
+            />
+          </Box>
         </Grid>
       </Grid>
 
@@ -80,6 +104,7 @@ export default function Home() {
 }
 
 const getCriteriaFromAxie = (
+  includeEyesAndEars: boolean,
   axieDetail?: AxieDetailType,
 ): AxieSearchCriteria => {
   if (!axieDetail) return null;
@@ -87,7 +112,15 @@ const getCriteriaFromAxie = (
   return {
     classes: [axieDetail.class],
     parts: axieDetail.parts
-      .map((part) => part.type)
-      .filter((partType) => ![PartType.EYES, PartType.EARS].includes(partType)),
+      .filter((part) => {
+        let excludeParts = [];
+
+        if (!includeEyesAndEars) {
+          excludeParts = [PartType.EYES, PartType.EARS];
+        }
+
+        return !excludeParts.includes(part.type);
+      })
+      .map((part) => part.id),
   };
 };
