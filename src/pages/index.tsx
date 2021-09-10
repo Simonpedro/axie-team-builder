@@ -10,11 +10,9 @@ import { useState } from "react";
 import AxieDetail from "../components/AxieDetail";
 import AxiePaginator from "../components/AxiePaginator";
 import AxieSelector from "../components/AxieSelector";
-import useAxieBriefList, {
-  AxieSearchCriteria,
-} from "../hooks/useAxieBriefList";
+import useAxieBriefList from "../hooks/useAxieBriefList";
 import useAxieDetail from "../hooks/useAxieDetail";
-import { AxieDetail as AxieDetailType, PartType } from "../types";
+import getSearchVariablesFromAxie from "../utils/getSearchVariablesFromAxie";
 
 export default function Home() {
   const [axie1Id, setAxie1Id] = useState("");
@@ -27,18 +25,18 @@ export default function Home() {
   const { data: axieDetail3 } = useAxieDetail(axie3Id);
 
   const { data: similarAxies1 } = useAxieBriefList(
-    getCriteriaFromAxie(includeEyesAndEars, axieDetail1),
+    getSearchVariablesFromAxie(includeEyesAndEars, axieDetail1),
   );
   const { data: similarAxies2 } = useAxieBriefList(
-    getCriteriaFromAxie(includeEyesAndEars, axieDetail2),
+    getSearchVariablesFromAxie(includeEyesAndEars, axieDetail2),
   );
   const { data: similarAxies3 } = useAxieBriefList(
-    getCriteriaFromAxie(includeEyesAndEars, axieDetail3),
+    getSearchVariablesFromAxie(includeEyesAndEars, axieDetail3),
   );
 
   return (
-    <Container sx={{ textAlign: "center" }}>
-      <Typography variant="h1" sx={{ my: 2 }}>
+    <Container sx={{ textAlign: "center", py: 2 }}>
+      <Typography variant="h1" sx={{ mb: 2 }}>
         Axie Team Builder
       </Typography>
 
@@ -102,25 +100,3 @@ export default function Home() {
     </Container>
   );
 }
-
-const getCriteriaFromAxie = (
-  includeEyesAndEars: boolean,
-  axieDetail?: AxieDetailType,
-): AxieSearchCriteria => {
-  if (!axieDetail) return null;
-
-  return {
-    classes: [axieDetail.class],
-    parts: axieDetail.parts
-      .filter((part) => {
-        let excludeParts = [];
-
-        if (!includeEyesAndEars) {
-          excludeParts = [PartType.EYES, PartType.EARS];
-        }
-
-        return !excludeParts.includes(part.type);
-      })
-      .map((part) => part.id),
-  };
-};

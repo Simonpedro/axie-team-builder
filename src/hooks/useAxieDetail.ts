@@ -1,17 +1,8 @@
 import { useQuery } from "@apollo/client"
-import GET_AXIE_DETAIL from "../queries/GetAxieDetail.query"
-import { AxieDetail } from "../types";
-
-interface Data {
-  axie: AxieDetail
-}
-
-interface Variables {
-  axieId: string
-}
+import GET_AXIE_DETAIL, { GetAxieDetailData, GetAxieDetailVariables } from "../queries/GetAxieDetail.query"
 
 const useAxieDetail = (axieId: string) => {
-  const { data, loading, error } = useQuery<Data, Variables>(GET_AXIE_DETAIL, { variables: { axieId }, skip: !axieId })
+  const { data, loading, error } = useQuery<GetAxieDetailData, GetAxieDetailVariables>(GET_AXIE_DETAIL, { variables: { axieId }, skip: !axieId })
 
   return { data: data?.axie, loading, error };
 }

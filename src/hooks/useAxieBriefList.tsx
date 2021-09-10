@@ -1,36 +1,17 @@
 import { useQuery } from "@apollo/client";
-import GET_AXIE_BRIEF_LIST from "../queries/GetAxieBriefList.query";
-import { AxieDetail, Class, PartType } from "../types";
+import GET_AXIE_BRIEF_LIST, {
+  GetAxieBriefListData,
+  GetAxieBriefListVariables,
+} from "../queries/GetAxieBriefList.query";
 
-interface Data {
-  axies: {
-    results: AxieDetail[];
-  };
-}
-
-export interface AxieSearchCriteria {
-  classes: Class[];
-  parts: string[];
-}
-
-interface Variables {
-  criteria: AxieSearchCriteria;
-  auctionType: "Sale" | "NotForSale" | "All";
-  sort: "PriceAsc" | "PriceDesc" | "Latest";
-}
-
-const useAxieBriefList = (criteria?: AxieSearchCriteria) => {
-  const { data, loading, error } = useQuery<Data, Variables>(
-    GET_AXIE_BRIEF_LIST,
-    {
-      variables: {
-        criteria,
-        auctionType: "Sale",
-        sort: "PriceAsc",
-      },
-      skip: !criteria,
-    },
-  );
+const useAxieBriefList = (variables?: GetAxieBriefListVariables) => {
+  const { data, loading, error } = useQuery<
+    GetAxieBriefListData,
+    GetAxieBriefListVariables
+  >(GET_AXIE_BRIEF_LIST, {
+    variables,
+    skip: !variables,
+  });
 
   return { data: data?.axies?.results, loading, error };
 };

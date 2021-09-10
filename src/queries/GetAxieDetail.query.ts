@@ -1,4 +1,13 @@
 import { gql } from "@apollo/client";
+import { AxieDetail } from "../types";
+
+export interface GetAxieDetailData {
+  axie: AxieDetail
+}
+
+export interface GetAxieDetailVariables {
+  axieId: string
+}
 
 const GET_AXIE_DETAIL = gql`
   query GetAxieDetail($axieId: ID!) {
